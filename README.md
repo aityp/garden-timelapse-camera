@@ -41,6 +41,7 @@ real camera in my garden.
 | **RAM Mounts** short double socket arm, 1" ball (RAM-B-201U-A) and two **FANAUE** 1" ball diamond bases | a ball-and-socket mount: one base on the timber, one on the box, joined by the arm, so you can aim it and lock it |
 | [British General IP66 weatherproof junction box, 60mm x 120mm x 120mm](https://www.screwfix.com/p/british-general-ip66-57a-5-terminal-weatherproof-outdoor-junction-box-60mm-x-120mm-x-120mm/33518) | the enclosure for the Pi and camera |
 | 3D-printed Pi mount: [Raspberry Pi Open Wall Mount by mintonette](https://www.thingiverse.com/thing:5183183) | holds the Pi inside the box |
+| 3D-printed camera bracket: [Raspberry Pi Camera Module 3 Wide bracket](https://www.printables.com/model/1865748-raspberry-pi-camera-module-3-wide-bracket) (M2 and M3 versions) | holds the camera board against the window in the box |
 | IP68 cable gland | seals the Ethernet cable's entry into the box |
 | A Mac | the scripts that pull and assemble use macOS tools (launchd, `stat -f`) |
 
