@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Garden camera: report which state the camera is in - filming, fast, normal, or
+# not capturing at all (e.g. timers stopped by hand and never restarted).
+#
+# In fast or normal mode it adds a second line saying whether frames are actually
+# being taken right now: waiting for daylight (with the time capture resumes),
+# capturing (with the last frame's time), or a WARNING if it is daylight but no
+# recent frame exists - which means something is wrong with the camera.
+#
+# Read-only - is-active is an unprivileged query, so no sudo needed.
+
+detail() {
+  # $1 = how many minutes without a frame counts as a problem in daylight.
+  # Uses capture.py's own shooting window, so it can never disagree with it.
+  python3 - "$1" <<'EOF' 2>/dev/null || true
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+sys.path.insert(0, str(Path.home() / "garden-cam"))
+from capture import shooting_window, CAPTURE_DIR, TZ
+from zoneinfo import ZoneInfo
+
+limit = float(sys.argv[1])
+now = datetime.now(ZoneInfo(TZ))
+start, end = shooting_window(now)
+if now < start:
+    print(f"Dark - not capturing until {start:%H:%M}.")
+elif now > end:
+    nxt, _ = shooting_window(now + timedelta(days=1))
+    print(f"Dark - not capturing until {nxt:%H:%M} tomorrow.")
+else:
+    frames = sorted((CAPTURE_DIR / f"{now:%Y-%m-%d}").glob("garden_*.jpg"))
+    if frames:
+        stamp = frames[-1].stem[len("garden_"):]  # YYYY-MM-DD_HHMMSS
+        last = datetime.strptime(stamp, "%Y-%m-%d_%H%M%S").replace(tzinfo=now.tzinfo)
+        mins = (now - last).total_seconds() / 60
+        if mins <= limit:
+            print(f"Capturing - last frame {last:%H:%M:%S}.")
+        else:
+            print(f"WARNING - it's daylight but the last frame was {mins:.0f} min ago ({last:%H:%M}).")
+    elif (now - start).total_seconds() / 60 <= limit:
+        print("Capturing - first frame of the day is due now.")
+    else:
+        print("WARNING - it's daylight but there are no frames today.")
+EOF
+}
+
+if systemctl is-active --quiet garden-cam-film.service; then
+  echo "FILMING - recording video. Run  film-off  to stop."
+elif systemctl is-active --quiet garden-cam-capture-fast.timer; then
+  echo "Fast mode is ON - capturing every few seconds."
+  detail 1
+elif systemctl is-active --quiet garden-cam-capture.timer; then
+  echo "Normal mode - one frame a minute."
+  detail 3
+else
+  echo "NOT CAPTURING - no timer running. Run  fast-off  to go back to normal."
+fi

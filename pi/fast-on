@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Garden camera: switch to FAST / burst capture cadence.
+#
+# Stops the normal minute-timer and starts the fast one. The fast timer is
+# start-only - it has no [Install] section and can never be enabled - so a
+# reboot always drops back to the normal cadence on its own.
+#
+# Needs root to control the timers. Run by hand it will ask for your password;
+# for a phone shortcut or a physical button (unattended), add a NOPASSWD sudoers
+# rule for these exact systemctl commands. See FAST-MODE.md.
+set -euo pipefail
+
+sudo systemctl stop  garden-cam-capture.timer
+sudo systemctl start garden-cam-capture-fast.timer
+
+echo "FAST mode ON - capturing every few seconds."
+echo "Run  fast-off  to stop. It also resets to normal overnight and on reboot."

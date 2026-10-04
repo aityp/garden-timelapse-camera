@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Garden camera: report whether fast/burst mode is currently on.
+#
+# Read-only - `is-active` is an unprivileged query, so this needs no sudo and no
+# sudoers rule, unlike fast-on / fast-off. Handy as a third phone shortcut.
+if systemctl is-active --quiet garden-cam-capture-fast.timer; then
+  echo "Fast mode is ON - capturing every few seconds."
+else
+  echo "Normal mode - one frame a minute."
+fi

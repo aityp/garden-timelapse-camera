@@ -1,0 +1,10 @@
+[Unit]
+Description=Garden camera - reset to normal capture cadence
+
+[Service]
+Type=oneshot
+# No User= line, so this runs as root and can control the timers directly with no
+# sudo. It does the same two things fast-off does, but from a context that is
+# already privileged - which is why it does not call the fast-off script.
+ExecStart=/usr/bin/systemctl stop garden-cam-capture-fast.timer
+ExecStart=/usr/bin/systemctl start garden-cam-capture.timer

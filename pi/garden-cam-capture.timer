@@ -1,0 +1,19 @@
+[Unit]
+Description=Run the garden camera capture every minute
+
+[Timer]
+# Every minute, on the minute. The capture script decides if it is daylight.
+OnCalendar=*:0/1
+
+# Hold systemd to the minute it was given. Left alone it allows itself up to
+# 60s of lateness so it can batch wakeups, and uneven gaps between frames read
+# as stutter in the finished video.
+AccuracySec=1s
+
+# After downtime, pick up on the next minute rather than firing a catch-up run.
+# The catch-up is worthless at this interval, and being able to offer it means
+# systemd writing the last fire time to the card every single minute, forever.
+Persistent=false
+
+[Install]
+WantedBy=timers.target

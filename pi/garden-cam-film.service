@@ -1,0 +1,39 @@
+[Unit]
+Description=Garden time-lapse camera - record video (film mode)
+
+# Started and stopped by film-on / film-off. No [Install] section, so like the
+# fast timer it can never be enabled and a reboot never starts it.
+
+[Service]
+Type=simple
+User=gc
+
+# Give any capture that was already in flight when the timers stopped a moment
+# to finish and release the camera (single access).
+ExecStartPre=/bin/sleep 3
+
+# Same field of view as the stills: --mode 2304:1296 is the full sensor, binned.
+# Without it the sensor picks a cropped mode and the video will not line up with
+# the time-lapse. 1080p30 is the most the Pi 4's hardware encoder handles.
+# --denoise cdn_off: the full colour denoise at 1080p30 is too much for the Pi 4
+# and can drop frames; with it off a 30s test held a steady 33.3ms on every frame.
+# Focus locked at infinity, same as capture.py. Raw H.264 out; film-wrap turns it
+# into .mp4 when filming stops.
+ExecStart=/bin/sh -c 'mkdir -p /home/gc/videos && exec rpicam-vid -t 0 -n --mode 2304:1296 --width 1920 --height 1080 --framerate 30 --autofocus-mode manual --lens-position 0.0 --bitrate 25000000 --denoise cdn_off -o /home/gc/videos/garden-cam_$$(date +%%Y-%%m-%%d_%%H%%M%%S).h264'
+
+# rpicam-vid treats SIGINT like Ctrl-C and closes the file cleanly.
+KillSignal=SIGINT
+
+# Safety net: a forgotten recording stops itself after 30 minutes rather than
+# filling the SD card.
+RuntimeMaxSec=1800
+
+# However filming ends (film-off, the 30-minute limit, or rpicam-vid failing),
+# go back to normal one-a-minute capture. The + runs this as root regardless of
+# User= above, so it needs no sudoers rule.
+ExecStopPost=+/usr/bin/systemctl start garden-cam-capture.timer
+
+# Then wrap the recording as .mp4 (no re-encode) for the Mac's pull to collect.
+# A 30-minute take is several GB to rewrite on the SD card, so allow time for it.
+ExecStopPost=/home/gc/garden-cam/film-wrap
+TimeoutStopSec=600

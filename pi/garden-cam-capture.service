@@ -1,0 +1,16 @@
+[Unit]
+Description=Garden time-lapse camera - capture one daylight frame
+
+[Service]
+Type=oneshot
+User=gc
+ExecStart=/usr/bin/python3 /home/gc/garden-cam/capture.py
+
+# Kill a capture that has not finished in 15 seconds, before the next is due.
+# Without this, a wedged camera (glitch, knocked ribbon) leaves a oneshot
+# "activating" forever, which blocks every later fire. Captures stop and
+# nothing says so.
+# 15s, not 50s: fast mode's 5s cadence makes 50s too slow to
+# clear a hang (it would block ~10 burst frames). 15s clears it in ~3, and still
+# sits well above a ~3s capture. See Fast mode in the README.
+TimeoutStartSec=15

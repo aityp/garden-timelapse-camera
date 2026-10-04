@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Garden camera: return to NORMAL capture cadence (one frame a minute).
+#
+# Safe to run at any time, even when already normal: stopping an already-stopped
+# timer and starting an already-running one are both no-ops. That is exactly what
+# lets the nightly reset fire this blindly without checking anything first.
+set -euo pipefail
+
+sudo systemctl stop  garden-cam-capture-fast.timer
+sudo systemctl start garden-cam-capture.timer
+
+echo "NORMAL mode - one frame a minute."

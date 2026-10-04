@@ -1,0 +1,14 @@
+[Unit]
+Description=Garden camera - nightly reset to normal capture cadence
+
+[Timer]
+# Once a day, in the dead of night, force the camera back to its normal cadence.
+# This guarantees fast/burst mode can never leak into the next day if you forget
+# to turn it off. 01:00 is safely dark (nothing is captured then anyway) and well
+# before any dawn. The reset it runs is a no-op when already normal, so firing it
+# every night regardless is harmless.
+OnCalendar=*-*-* 01:00:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target

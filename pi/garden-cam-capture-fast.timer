@@ -1,0 +1,22 @@
+[Unit]
+Description=Garden camera - FAST/burst capture cadence
+
+[Timer]
+# Every 5 seconds, on the clock - the same OnCalendar style as the normal timer
+# (which is *:0/1, i.e. every minute), just at 5-second resolution. Clock-aligned,
+# so frames stay evenly spaced. Change the 0/5 to taste.
+#
+# Unit= is needed here and NOT on the normal timer: systemd auto-pairs a timer
+# with the service of the same name, but this timer's name (…-fast) does not match
+# the service, so it has to be told explicitly which one to run. Both timers drive
+# the SAME capture service, so capture.py is untouched - only how often it is asked.
+OnCalendar=*:*:0/5
+AccuracySec=1s
+Unit=garden-cam-capture.service
+
+# NO [Install] SECTION, ON PURPOSE.
+# Without one, `systemctl enable` on this timer is impossible - systemd has
+# nowhere to install it and refuses. So it can only ever be started and stopped
+# (by fast-on / fast-off), never enabled, so it can never get a boot symlink, so
+# a reboot ALWAYS reverts to the normal minute cadence - by construction, not by
+# remembering. Do not add an [Install] section.

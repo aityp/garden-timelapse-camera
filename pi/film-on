@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Garden camera: stop the time-lapse and start recording video.
+#
+# Stops both capture timers (normal and fast) so the camera is free, then starts
+# garden-cam-film.service, which records 1080p30 to ~/videos/ until film-off.
+# It stops itself after 30 minutes if forgotten, and whenever it stops it puts
+# the camera back into normal one-a-minute capture.
+#
+# Unattended (phone shortcut) needs the NOPASSWD sudoers rule in FAST-MODE.md
+# plus the two film lines for garden-cam-film.service.
+set -euo pipefail
+
+sudo systemctl stop  garden-cam-capture.timer
+sudo systemctl stop  garden-cam-capture-fast.timer
+sudo systemctl start garden-cam-film.service
+
+echo "FILMING - recording video. Run  film-off  to stop and go back to normal."

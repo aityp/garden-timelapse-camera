@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Garden camera: stop recording video and go back to normal capture.
+#
+# Stopping garden-cam-film.service closes the video file cleanly; the service
+# then starts the normal one-a-minute timer again and wraps the recording as .mp4
+# (this command waits for that). The Mac's pull job collects it from ~/videos/. Safe to run
+# when not filming: stopping a stopped service is a no-op.
+set -euo pipefail
+
+sudo systemctl stop garden-cam-film.service
+
+latest="$(ls -t "$HOME"/videos/*.mp4 2>/dev/null | head -1 || true)"
+echo "Stopped filming - back to NORMAL mode, one frame a minute."
+if [ -n "$latest" ]; then
+  echo "Saved: $latest ($(du -h "$latest" | cut -f1))"
+fi

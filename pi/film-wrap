@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Garden camera: wrap finished raw H.264 recordings as .mp4 so Final Cut opens them.
+#
+# Run automatically by garden-cam-film.service when filming stops. No re-encode
+# (-c copy), so it is quick and lossless. Writes to a .part name and renames when
+# done, so the Mac's pull never collects a half-written file. The raw .h264 is
+# only deleted once its .mp4 exists.
+set -u
+
+for f in /home/gc/videos/*.h264; do
+  [ -e "$f" ] || continue
+  out="${f%.h264}.mp4"
+  if ffmpeg -nostdin -loglevel error -y -fflags +genpts -framerate 30 -i "$f" \
+       -c copy -f mp4 "$out.part" && mv "$out.part" "$out"; then
+    rm -f "$f"
+  else
+    rm -f "$out.part"
+    echo "film-wrap: failed to wrap $f - left as .h264" >&2
+  fi
+done
