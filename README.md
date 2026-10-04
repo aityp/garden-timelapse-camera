@@ -33,10 +33,10 @@ real camera in my garden.
 
 | | |
 |---|---|
-| Raspberry Pi 4 Model B, 2GB | the camera's brain; 2GB is plenty |
-| Camera Module 3 **Wide** (Sony IMX708, 12MP, 120° view) | the wide lens is what takes in a whole garden from close to a wall |
-| Waveshare **PoE HAT (E)** | takes power off the Ethernet cable (802.3af, low-profile) |
-| TP-Link **TL-POE160S** PoE injector | puts the power onto the cable, at the router end |
+| [Raspberry Pi 4 Model B, 2GB](https://thepihut.com/products/raspberry-pi-4-model-b) | the camera's brain; 2GB is plenty |
+| [Camera Module 3 **Wide**](https://thepihut.com/products/raspberry-pi-camera-module-3) (Sony IMX708, 12MP, 120° view; choose the Wide option) | the wide lens is what takes in a whole garden from close to a wall |
+| [Waveshare **PoE HAT (E)**](https://thepihut.com/products/power-over-ethernet-hat-e-for-raspberry-pi) | takes power off the Ethernet cable (802.3af, low-profile) |
+| [TP-Link **TL-POE160S** PoE injector](https://thepihut.com/products/tp-link-tl-poe160s-30w-poe-injector) | puts the power onto the cable, at the router end |
 | SanDisk **High Endurance** 64GB microSD card | built for continuous writing, which a camera is |
 | **RAM Mounts** short double socket arm, 1" ball (RAM-B-201U-A) and two **FANAUE** 1" ball diamond bases | a ball-and-socket mount: one base on the timber, one on the box, joined by the arm, so you can aim it and lock it |
 | [British General IP66 weatherproof junction box, 60mm x 120mm x 120mm](https://www.screwfix.com/p/british-general-ip66-57a-5-terminal-weatherproof-outdoor-junction-box-60mm-x-120mm-x-120mm/33518) | the enclosure for the Pi and camera |
