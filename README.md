@@ -14,6 +14,20 @@ comfortable following commands in a terminal.
 **How it was made.** This code was written with AI (Claude) and is tested on a
 real camera in my garden.
 
+## What it looks like
+
+![Inside the box](docs/images/inside-the-box.jpg)
+
+*Inside the box: the Pi 4 with the PoE HAT on top, the grey ribbon cable, the camera board on its mount against the wall with the lens hole, and the cable gland at the bottom where the Ethernet cable comes in.*
+
+![The camera on the wall](docs/images/on-the-wall.jpg)
+
+*The box open on its plywood plate under the eaves, on the ball-and-socket arm, with the single Ethernet cable running up to the weatherproof connector.*
+
+![A frame the camera took](docs/images/sample-frame.jpg)
+
+*A frame from the camera (the neighbours' side is blurred).*
+
 ## What it does
 
 - **Capture (Pi).** One full 12MP still a minute, daylight only. The window is
